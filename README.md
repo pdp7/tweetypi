@@ -15,6 +15,7 @@ sudo pip install twitter
 mkdir ~/python
 cd ~/python
 git clone https://github.com/pdp7/Adafruit-Raspberry-Pi-Python-Code.git
-chmod o+x ./display-hashtag.sh 
-sudo ./display-hashtag "#adafruit"
+git clone https://github.com/pdp7/tweetypi.git
+cd tweetypi
+sudo ./display-hashtag "#bears"
 </pre>
