@@ -11,33 +11,36 @@ import re
 import sys
 
 class HashTagDisplay():
-    def __init__(self, hashtag, cols=16, rows=2):
+    def __init__(self, hashtag, cols=16, rows=2, delay=3, debug=False):
         self.lcd = Adafruit_CharLCD()
         self.cols = cols
         self.rows = rows
+        self.delay = delay
+        self.debug = debug
         #note: tweet display loop is hardcoded for 2 rows
         self.lcd.begin(cols, rows)
 
-    def search(self):
+    def search(self, hashtag):
            # search for tweets with specified hashtag
+           print hashtag
            twitter_search = Twitter(domain="search.twitter.com")
-           self.results = twitter_search.search(q=hashtag)
+           return twitter_search.search(q=hashtag)
     
-    def display(self):
+    def display(self, results):
            # Display each tweet in the twitter search results
-           for tweet in self.results.get('results'):
-
+           for tweet in results.get('results'):
                msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
-               print "msg: " + msg
-   
+               if self.debug == True:
+                   print "msg: " + msg
                # break tweet into lines the width of LCD
                lines = textwrap.wrap(msg, self.cols)
+               self.printLines(lines)
 
+    def printLines(self, lines):
                # display each line of the tweet
                i = 0
                while i < lines.__len__():
                    self.lcd.clear()
-
                    # I added short delay after every LCD command
                    # as I found intermittement issue where
                    # eventually the LCD would start displaying
@@ -65,14 +68,7 @@ class HashTagDisplay():
                    i=i+1
 
                    # pause to allow human to read displayed rows
-                   sleep(3)
-
-    def run(self):
-       # repeat twitter search and results display loop forever
-       print "run"
-       self.search()
-       self.display()
-
+                   sleep(self.delay)
 
 
 # following is executed when this script is run from the shell
@@ -81,5 +77,8 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag)
-    hashTagDisplay.run()
+    hashTagDisplay = HashTagDisplay(hashtag, debug=True)
+    # repeat twitter search and display forever
+    while True:
+        results = hashTagDisplay.search(hashtag)
+        hashTagDisplay.display(results)
