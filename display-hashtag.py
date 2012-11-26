@@ -10,65 +10,69 @@ import textwrap
 import re
 import sys
 
-# takes command line argument for twitter hashtag to display
-if len(sys.argv) < 2:  
-  sys.exit("usage: tweet.py <hash-tag>")
-hashtag = sys.argv[1]
+class HashTagDisplay():
+    def __init__(self, hashtag, cols=16, rows=2):
+        self.lcd = Adafruit_CharLCD()
+        self.cols = cols
+        self.rows = rows
+        #note: tweet display loop is hardcoded for 2 rows
+        self.lcd.begin(cols, rows)
 
-# using a 16x2 character LCD
-lcd_cols = 16
-#note: results display loop is hardcoded for 2 rows
-lcd_rows = 2
-lcd = Adafruit_CharLCD()
-lcd.begin(lcd_cols, lcd_rows)
+    def run(self):
+       # repeat twitter search and results display loop forever
+       while True:
 
-# repeat twitter search and results display loop forever
-while True:
+           # search for tweets with specified hashtag
+           twitter_search = Twitter(domain="search.twitter.com")
+           results = twitter_search.search(q=hashtag)
 
-    # search for tweets with specified hashtag
-    twitter_search = Twitter(domain="search.twitter.com")
-    results = twitter_search.search(q=hashtag)
+           # Display each tweet in the twitter search results
+           for tweet in results.get('results'):
 
-    # Display each tweet in the twitter search results
-    for tweet in results.get('results'):
+               msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
+               print "msg: " + msg
+   
+               # break tweet into lines the width of LCD
+               lines = textwrap.wrap(msg, self.cols)
 
-        msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
-        print "msg: " + msg
+               # display each line of the tweet
+               i = 0
+               while i < lines.__len__():
+                   self.lcd.clear()
 
-        # break tweet into lines the width of LCD
-        lines = textwrap.wrap(msg, lcd_cols)
+                   # I added short delay after every LCD command
+                   # as I found intermittement issue where
+                   # eventually the LCD would start displaying
+                   # random "garbage" characters.  This stopped
+                   # occuring after adding the delay
+                   sleep(0.2)
 
-        # display each line of the tweet
-        i = 0
-        while i < lines.__len__():
-            lcd.clear()
+                   # display line on first row
+                   self.lcd.message(lines[i])
+                   sleep(0.2)
+                   i=i+1
 
-            # I added short delay after every LCD command
-            # as I found intermittement issue where
-            # eventually the LCD would start displaying
-            # random "garbage" characters.  This stopped
-            # occuring after adding the delay
-            sleep(0.2)
+                   # no more lines remaining for this tweet
+                   if i >= lines.__len__():
+                      sleep(3)
+                      break
 
-            # display line on first row
-            lcd.message(lines[i])
-            sleep(0.2)
-            i=i+1
+                   # move cursor to the next LCD row
+                   self.lcd.message("\n")
+                   sleep(0.2)
 
-            # no more lines remaining for this tweet
-            if i >= lines.__len__():
-               sleep(3)
-               break
+                   # display line on second row
+                   self.lcd.message(lines[i])
+                   sleep(0.2)
+                   i=i+1
 
-            # move cursor to the next LCD row
-            lcd.message("\n")
-            sleep(0.2)
+                   # pause to allow human to read displayed rows
+                   sleep(3)
 
-            # display line on second row
-            lcd.message(lines[i])
-            sleep(0.2)
-            print lines[i]
-            i=i+1
-
-            # pause to allow human to read displayed rows
-            sleep(3)
+if __name__ == '__main__':
+    # takes command line argument for twitter hashtag to display
+    if len(sys.argv) < 2:  
+        sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
+    hashtag = sys.argv[1]
+    hashTagDisplay = HashTagDisplay(hashtag)
+    hashTagDisplay.run()
