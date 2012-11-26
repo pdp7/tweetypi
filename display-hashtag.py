@@ -12,12 +12,16 @@ import sys
 
 class HashTagDisplay():
     def __init__(self, hashtag, cols=16, rows=2, delay=3, debug=False):
-        self.lcd = Adafruit_CharLCD()
+        # number of columns on the character LCD
         self.cols = cols
+        # number of rows on the character LCD 
+        # note: tweet display loop is hardcoded for 2 rows
         self.rows = rows
+        # duration in seconds to allow human to read LCD lines
         self.delay = delay
+        # print messages to shell for debugging 
         self.debug = debug
-        #note: tweet display loop is hardcoded for 2 rows
+        self.lcd = Adafruit_CharLCD()
         self.lcd.begin(cols, rows)
 
     def search(self, hashtag):
