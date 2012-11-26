@@ -63,10 +63,12 @@ while True:
             # move cursor to the next LCD row
             lcd.message("\n")
             sleep(0.2)
+
             # display line on second row
             lcd.message(lines[i])
             sleep(0.2)
             print lines[i]
             i=i+1
+
             # pause to allow human to read displayed rows
             sleep(3)
