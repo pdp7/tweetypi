@@ -35,6 +35,7 @@ class HashTagDisplay():
            for tweet in results.get('results'):
                msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
                if self.debug == True:
+                   print "===================="
                    print "msg: " + msg
                # break tweet into lines the width of LCD
                lines = textwrap.wrap(msg, self.cols)
@@ -51,25 +52,27 @@ class HashTagDisplay():
                    # random "garbage" characters.  This stopped
                    # occuring after adding the delay
                    sleep(0.2)
+                       
+                   if self.debug == True:
+                          print "--------------------"
 
-                   # display line on first row
-                   self.lcd.message(lines[i])
-                   sleep(0.2)
-                   i=i+1
+                   # print line to each LCD row 
+		   for row in range(self.rows):
+                       # move cursor to the next LCD row
+                       #self.lcd.message("\n")
+                       self.lcd.setCursor(0,row)
+                       sleep(0.2)
+                       
+                       # display line on current LCD row
+                       print lines[i]
+                       self.lcd.message(lines[i])
+                       sleep(0.2)
+                       i=i+1
 
-                   # no more lines remaining for this tweet
-                   if i >= lines.__len__():
-                      sleep(3)
-                      break
-
-                   # move cursor to the next LCD row
-                   self.lcd.message("\n")
-                   sleep(0.2)
-
-                   # display line on second row
-                   self.lcd.message(lines[i])
-                   sleep(0.2)
-                   i=i+1
+                       # no more lines remaining for this tweet
+                       if i >= lines.__len__():
+                           sleep(3)
+                           break
 
                    # pause to allow human to read displayed rows
                    sleep(self.delay)
@@ -81,7 +84,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag, debug=True)
+    hashTagDisplay = HashTagDisplay(hashtag, cols=16, rows=2, debug=True)
     # repeat twitter search and display forever
     while True:
         results = hashTagDisplay.search(hashtag)
