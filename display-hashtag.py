@@ -18,16 +18,14 @@ class HashTagDisplay():
         #note: tweet display loop is hardcoded for 2 rows
         self.lcd.begin(cols, rows)
 
-    def run(self):
-       # repeat twitter search and results display loop forever
-       while True:
-
+    def search(self):
            # search for tweets with specified hashtag
            twitter_search = Twitter(domain="search.twitter.com")
-           results = twitter_search.search(q=hashtag)
-
+           self.results = twitter_search.search(q=hashtag)
+    
+    def display(self):
            # Display each tweet in the twitter search results
-           for tweet in results.get('results'):
+           for tweet in self.results.get('results'):
 
                msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
                print "msg: " + msg
@@ -69,8 +67,17 @@ class HashTagDisplay():
                    # pause to allow human to read displayed rows
                    sleep(3)
 
+    def run(self):
+       # repeat twitter search and results display loop forever
+       print "run"
+       self.search()
+       self.display()
+
+
+
+# following is executed when this script is run from the shell
 if __name__ == '__main__':
-    # takes command line argument for twitter hashtag to display
+    # use argument to specify twitter hashtag to search and display
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
