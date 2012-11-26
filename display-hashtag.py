@@ -25,57 +25,56 @@ class HashTagDisplay():
         self.lcd.begin(cols, rows)
 
     def search(self, hashtag):
-           # search for tweets with specified hashtag
-           print hashtag
-           twitter_search = Twitter(domain="search.twitter.com")
-           return twitter_search.search(q=hashtag)
+        """ search for tweets with specified hashtag """
+        twitter_search = Twitter(domain="search.twitter.com")
+        return twitter_search.search(q=hashtag)
     
     def display(self, results):
-           # Display each tweet in the twitter search results
-           for tweet in results.get('results'):
-               msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
-               if self.debug == True:
-                   print "===================="
-                   print "msg: " + msg
-               # break tweet into lines the width of LCD
-               lines = textwrap.wrap(msg, self.cols)
-               self.printLines(lines)
+        """ Display each tweet in the twitter search results """
+        for tweet in results.get('results'):
+            msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
+            if self.debug == True:
+                print "===================="
+                print "msg: " + msg
+            # break tweet into lines the width of LCD
+            lines = textwrap.wrap(msg, self.cols)
+            self.printLines(lines)
 
     def printLines(self, lines):
-               # display each line of the tweet
-               i = 0
-               while i < lines.__len__():
-                   self.lcd.clear()
-                   # I added short delay after every LCD command
-                   # as I found intermittement issue where
-                   # eventually the LCD would start displaying
-                   # random "garbage" characters.  This stopped
-                   # occuring after adding the delay
-                   sleep(0.2)
+        """ display each line of the tweet """
+        i = 0
+        while i < lines.__len__():
+            self.lcd.clear()
+            # I added short delay after every LCD command
+            # as I found intermittement issue where
+            # eventually the LCD would start displaying
+            # random "garbage" characters.  This stopped
+            # occuring after adding the delay
+            sleep(0.2)
+                
+            if self.debug == True:
+                print "--------------------"
+
+            # print line to each LCD row 
+            for row in range(self.rows):
+                # move cursor to the next LCD row
+                #self.lcd.message("\n")
+                self.lcd.setCursor(0,row)
+                sleep(0.2)
                        
-                   if self.debug == True:
-                          print "--------------------"
+                # display line on current LCD row
+                print lines[i]
+                self.lcd.message(lines[i])
+                sleep(0.2)
+                i=i+1
 
-                   # print line to each LCD row 
-		   for row in range(self.rows):
-                       # move cursor to the next LCD row
-                       #self.lcd.message("\n")
-                       self.lcd.setCursor(0,row)
-                       sleep(0.2)
-                       
-                       # display line on current LCD row
-                       print lines[i]
-                       self.lcd.message(lines[i])
-                       sleep(0.2)
-                       i=i+1
+                # no more lines remaining for this tweet
+                if i >= lines.__len__():
+                    sleep(3)
+                    break
 
-                       # no more lines remaining for this tweet
-                       if i >= lines.__len__():
-                           sleep(3)
-                           break
-
-                   # pause to allow human to read displayed rows
-                   sleep(self.delay)
+                # pause to allow human to read displayed rows
+                sleep(self.delay)
 
 
 # following is executed when this script is run from the shell
