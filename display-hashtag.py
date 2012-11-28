@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # Author: Drew Fustini
 # Target: Raspberry Pi
-# Desc: display tweets for a given hashtag on char LCD
+# Desc: display tweets for a given hashtag on char LCD; released a public domain
+# Blog post: http://www.element14.com/community/groups/raspberry-pi/blog/2012/11/26/display-tweets-on-a-character-lcd
 
 from Adafruit_CharLCD import Adafruit_CharLCD
 from time import sleep
