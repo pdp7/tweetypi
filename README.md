@@ -5,6 +5,8 @@ Repository for Python scripts to display tweets on a character LCD connected to 
 
 Written by Drew Fustini.  Released as public domain.
 
+Blog post: http://www.element14.com/community/groups/raspberry-pi/blog/2012/11/26/display-tweets-on-a-character-lcd
+
 display-hashtag.py 
 ------------------
 Displays tweets that contain a specified hashtag
@@ -15,6 +17,7 @@ sudo pip install twitter
 mkdir ~/python
 cd ~/python
 git clone https://github.com/pdp7/Adafruit-Raspberry-Pi-Python-Code.git
-chmod o+x ./display-hashtag.sh 
-sudo ./display-hashtag "#adafruit"
+git clone https://github.com/pdp7/tweetypi.git
+cd tweetypi
+sudo ./display-hashtag "#bears"
 </pre>

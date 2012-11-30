@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # Author: Drew Fustini
 # Target: Raspberry Pi
-# Desc: display tweets for a given hashtag on char LCD
+# Desc: display tweets for a given hashtag on char LCD; released as public domain
+# Blog post: http://www.element14.com/community/groups/raspberry-pi/blog/2012/11/26/display-tweets-on-a-character-lcd
 
 from Adafruit_CharLCD import Adafruit_CharLCD
 from time import sleep
@@ -12,10 +13,9 @@ import sys
 
 class HashTagDisplay():
     def __init__(self, hashtag, cols=16, rows=2, delay=3, debug=False):
-        # number of columns on the character LCD
+        # number of columns on the character LCD (min: 16, max: 20)
         self.cols = cols
-        # number of rows on the character LCD 
-        # note: tweet display loop is hardcoded for 2 rows
+        # number of rows on the character LCD (min: 1, max: 4)
         self.rows = rows
         # duration in seconds to allow human to read LCD lines
         self.delay = delay
