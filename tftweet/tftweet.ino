@@ -153,27 +153,30 @@ unsigned long testText() {
 //  tft.print("@pdp7:");
   tft.setTextColor(GREEN);
   Serial.println("Hello Pi");
+  int row = 0;
+  int col = 0;
+  String msg = "0123456789";
+  int cnt = 0;
   while(1) {
-  if(Serial.available())
-  {
+    if(Serial.available())
+    {
       String content = "";
-  char character;
+      char character = 'X';
       character = Serial.read();
-      content.concat(character);
-
-    tft.print(content);
+      Serial.print(character);
+      if(character=='\n') {
+         delay(5000);
+         tft.fillScreen(BLACK);  
+         tft.setCursor(0, 0);
+         tft.setTextSize(3);  
+         tft.setTextColor(GREEN);
+      } else {
+         content.concat(character);
+         tft.print(content);        
+      }
+    }
+    //delay(100);
   }
-  delay(100);
-  }
-/*  tft.print("12345678901234567");
-  tft.print("22345678901234567");
-  tft.print("32345678901234567");
-  tft.print("42345678901234567");
-  tft.print("52345678901234567");
-  tft.print("62345678901234567");
-  tft.print("72345678901234567");
-  tft.print("82345678901234567");
-  tft.print("92345678901234567");  */
   return micros() - start;
 }
 

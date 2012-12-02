@@ -46,21 +46,17 @@ class HashTagDisplay():
     def display(self, results):
            # Display each tweet in the twitter search results
            for tweet in results.get('results'):
-               msg = "@" + tweet.get('from_user') + ": " + tweet.get('text')
+               msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') + "   "
                #http://stackoverflow.com/questions/8689795/python-remove-non-ascii-characters-but-leave-periods-and-spaces
                msg = filter(lambda x: x in string.printable, msg)
-               msg = re.sub('\s+',' ', msg)
                if self.debug == True:
                    print "===================="
-                   print "msg: [" + msg + "]\n"
+                   print "msg: " + msg
                # break tweet into lines the width of LCD
-               #lines = textwrap.wrap(msg, 170) #self.cols)
-               for c in msg:
-                   self.ser.write(c)
-                   print c + " "
-                   sleep(0.01)
-               self.ser.write('\n');
-               sleep(5)
+               #lines = textwrap.wrap(msg, self.cols)
+               #self.printLines(lines)
+               self.ser.write(msg)
+               sleep(60)
 
     def printLines(self, lines):
                # display each line of the tweet
