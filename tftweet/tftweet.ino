@@ -35,22 +35,8 @@ void setup(void) {
 }
 
 void loop(void) {
-    tft.setRotation(1);
-    testText();
-    delay(2000);
-}
-
-void testFillScreen() {
+  tft.setRotation(1);
   tft.fillScreen(BLACK);
-  tft.fillScreen(RED);
-  tft.fillScreen(GREEN);
-  tft.fillScreen(BLUE);
-  tft.fillScreen(BLACK);
-}
-
-void testText() {
-  tft.fillScreen(BLACK);
-  unsigned long start = micros();
   tft.setCursor(0, 0);
   tft.setTextSize(3);
   tft.setTextColor(GREEN);
@@ -61,17 +47,18 @@ void testText() {
       char character = Serial.read();
       Serial.print(character);
       if(character=='\n') {
-         delay(LCD_DELAY);
-         tft.fillScreen(BLACK);  
-         tft.setCursor(0, 0);
-         tft.setTextSize(3);  
-         tft.setTextColor(GREEN);
-      } else {
-         content.concat(character);
-         tft.print(content);        
+        delay(LCD_DELAY);
+        tft.fillScreen(BLACK);  
+        tft.setCursor(0, 0);
+        tft.setTextSize(3);  
+        tft.setTextColor(GREEN);
+      } 
+      else {
+        content.concat(character);
+        tft.print(content);        
       }
     }
   }
-  return;
-}
+  delay(2000);
+}    
 

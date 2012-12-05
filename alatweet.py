@@ -43,7 +43,7 @@ if __name__ == '__main__':
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
     hashTagDisplay = HashTagDisplay(debug=True)
-   # repeat twitter search and display forever
+    # repeat twitter search and display forever
     while True:
         results = hashTagDisplay.search(hashtag)
         hashTagDisplay.display(results)
