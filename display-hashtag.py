@@ -57,24 +57,32 @@ class HashTagDisplay():
 
             # print line to each LCD row 
             for row in range(self.rows):
-                # move cursor to the next LCD row
-                #self.lcd.message("\n")
+                if self.debug == True:
+                    print lines[i]
+
                 self.lcd.setCursor(0,row)
                 sleep(0.2)
                        
                 # display line on current LCD row
-                print lines[i]
                 self.lcd.message(lines[i])
                 sleep(0.2)
                 i=i+1
 
                 # no more lines remaining for this tweet
                 if i >= lines.__len__():
-                    sleep(3)
+                    # sleep according to the number of rows displayed
+                    row_delay = self.delay / float(self.rows)
+                    delay = row_delay * (row+1)
+                    if(delay < 1):
+                        delay = 1
+                    sleep(delay)
                     break
 
                 # pause to allow human to read displayed rows
-                sleep(self.delay)
+                if(row+1 >= self.rows):
+                     sleep(self.delay)
+
+                sleep(0.2)
 
 
 # following is executed when this script is run from the shell
@@ -83,7 +91,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag, cols=16, rows=2, debug=True)
+    hashTagDisplay = HashTagDisplay(hashtag, cols=20, rows=4, debug=True)
     # repeat twitter search and display forever
     while True:
         results = hashTagDisplay.search(hashtag)
