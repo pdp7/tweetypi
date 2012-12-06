@@ -34,7 +34,6 @@ class HashTagDisplay():
         for tweet in results.get('results'):
             msg = "@" + tweet.get('from_user') + ": " + tweet.get('text') 
             if self.debug == True:
-                print "===================="
                 print "msg: " + msg
             # break tweet into lines the width of LCD
             lines = textwrap.wrap(msg, self.cols)
@@ -45,28 +44,19 @@ class HashTagDisplay():
         i = 0
         while i < lines.__len__():
             self.lcd.clear()
-            # I added short delay after every LCD command
-            # as I found intermittement issue where
-            # eventually the LCD would start displaying
-            # random "garbage" characters.  This stopped
-            # occuring after adding the delay
-            sleep(0.2)
                 
-            if self.debug == True:
-                print "--------------------"
-
             # print line to each LCD row 
             for row in range(self.rows):
-                if self.debug == True:
-                    print lines[i]
 
-                self.lcd.setCursor(0,row)
-                sleep(0.2)
-                       
                 # display line on current LCD row
+                self.lcd.setCursor(0,row)
                 self.lcd.message(lines[i])
-                sleep(0.2)
                 i=i+1
+                # 200ms delay is now only for visual effect
+                # initially added the delay to avoid issue 
+                # where garbage characters were displayed:
+                # https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/pull/13
+                sleep(0.2)
 
                 # no more lines remaining for this tweet
                 if i >= lines.__len__():
@@ -82,7 +72,6 @@ class HashTagDisplay():
                 if(row+1 >= self.rows):
                      sleep(self.delay)
 
-                sleep(0.2)
 
 
 # following is executed when this script is run from the shell
@@ -91,7 +80,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag, cols=20, rows=4, debug=True)
+    hashTagDisplay = HashTagDisplay(hashtag, cols=16, rows=2, delay=2, debug=True)
     # repeat twitter search and display forever
     while True:
         results = hashTagDisplay.search(hashtag)
