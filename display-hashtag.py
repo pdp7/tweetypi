@@ -12,7 +12,7 @@ import re
 import sys
 
 class HashTagDisplay():
-    def __init__(self, hashtag, cols=16, rows=2, delay=3, debug=False):
+    def __init__(self, cols=16, rows=2, delay=3, debug=False):
         # number of columns on the character LCD (min: 16, max: 20)
         self.cols = cols
         # number of rows on the character LCD (min: 1, max: 4)
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:  
         sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
     hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag, cols=16, rows=2, delay=2, debug=True)
+    hashTagDisplay = HashTagDisplay(cols=16, rows=2, delay=2, debug=True)
     # repeat twitter search and display forever
     while True:
         results = hashTagDisplay.search(hashtag)
