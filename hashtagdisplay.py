@@ -10,7 +10,6 @@ from twitter import Twitter
 import textwrap
 import re
 import sys
-import argparse
 
 class HashTagDisplay():
     def __init__(self, cols, rows, delay, debug=False):
@@ -22,7 +21,10 @@ class HashTagDisplay():
         self.delay = delay
         # print messages to shell for debugging 
         self.debug = debug
-        print self
+        if debug == True:
+            print " cols = {0}".format(cols)
+            print " rows = {0}".format(rows)
+            print "delay = {0}".format(delay)
         self.lcd = Adafruit_CharLCD()
         self.lcd.begin(cols, rows)
 
@@ -74,24 +76,3 @@ class HashTagDisplay():
                 if(row+1 >= self.rows):
                      sleep(self.delay)
 
-
-
-def usage():
-    sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
-
-# following is executed when this script is run from the shell
-if __name__ == '__main__':
-    # use argument to specify twitter hashtag to search and display
-    parser = argparse.ArgumentParser(description='Search Twitter for hashtag and display results on LCD')
-    parser.add_argument('hashtag', help='twitter hashtag to search and display (exclude "#" prefix)')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help="print debug messages to shell")
-    parser.add_argument('-r', '--rows', type=int, default='2', help="number of rows on the character LCD")
-    parser.add_argument('-c', '--cols', type=int, default='16', help="number of columns on the character LCD")
-    parser.add_argument('-d', '--delay', type=int, default='3', help="delay in seconds to allow human to read all displayed rows")
-    args = parser.parse_args()
-    print args
-    hashTagDisplay = HashTagDisplay(cols=args.cols, rows=args.rows, delay=args.delay, debug=args.verbose)
-    # repeat twitter search and display forever
-    while True:
-        results = hashTagDisplay.search(args.hashtag)
-        hashTagDisplay.display(results)
