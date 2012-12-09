@@ -19,5 +19,17 @@ cd ~/python
 git clone https://github.com/pdp7/Adafruit-Raspberry-Pi-Python-Code.git
 git clone https://github.com/pdp7/tweetypi.git
 cd tweetypi
-sudo ./display-hashtag "#bears"
 </pre>
+
+The only required argument for display-hashtag is the hashtag.  The '#' prefix should be omitted as it is added by the code.  The defaults assume 16x2 char LCD.
+
+<pre>
+sudo ./display-hashtag bears
+</pre>
+
+Here would be the arguments for 20x4 LCD:
+
+<pre>
+sudo ./display-hashtag --verbose --cols 20 --rows 4 --delay 3 bears
+</pre>
+
