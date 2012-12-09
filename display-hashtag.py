@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 from hashtagdisplay import HashTagDisplay
 import argparse
 
