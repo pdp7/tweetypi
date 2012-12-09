@@ -10,9 +10,10 @@ from twitter import Twitter
 import textwrap
 import re
 import sys
+import argparse
 
 class HashTagDisplay():
-    def __init__(self, hashtag, cols=16, rows=2, delay=3, debug=False):
+    def __init__(self, cols, rows, delay, debug=False):
         # number of columns on the character LCD (min: 16, max: 20)
         self.cols = cols
         # number of rows on the character LCD (min: 1, max: 4)
@@ -21,6 +22,7 @@ class HashTagDisplay():
         self.delay = delay
         # print messages to shell for debugging 
         self.debug = debug
+        print self
         self.lcd = Adafruit_CharLCD()
         self.lcd.begin(cols, rows)
 
@@ -74,14 +76,22 @@ class HashTagDisplay():
 
 
 
+def usage():
+    sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
+
 # following is executed when this script is run from the shell
 if __name__ == '__main__':
     # use argument to specify twitter hashtag to search and display
-    if len(sys.argv) < 2:  
-        sys.exit("usage: " + sys.argv[0] + " <hash-tag>")
-    hashtag = sys.argv[1]
-    hashTagDisplay = HashTagDisplay(hashtag, cols=16, rows=2, delay=2, debug=True)
+    parser = argparse.ArgumentParser(description='Search Twitter for hashtag and display results on LCD')
+    parser.add_argument('hashtag', help='twitter hashtag to search and display (exclude "#" prefix)')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help="print debug messages to shell")
+    parser.add_argument('-r', '--rows', type=int, default='2', help="number of rows on the character LCD")
+    parser.add_argument('-c', '--cols', type=int, default='16', help="number of columns on the character LCD")
+    parser.add_argument('-d', '--delay', type=int, default='3', help="delay in seconds to allow human to read all displayed rows")
+    args = parser.parse_args()
+    print args
+    hashTagDisplay = HashTagDisplay(cols=args.cols, rows=args.rows, delay=args.delay, debug=args.verbose)
     # repeat twitter search and display forever
     while True:
-        results = hashTagDisplay.search(hashtag)
+        results = hashTagDisplay.search(args.hashtag)
         hashTagDisplay.display(results)

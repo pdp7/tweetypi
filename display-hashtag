@@ -4,4 +4,4 @@
 CHARLCD_PATH=/home/pi/python/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCD/
 
 export PYTHONPATH=$PATH:${CHARLCD_PATH}
-python display-hashtag.py $1
+python display-hashtag.py $@
